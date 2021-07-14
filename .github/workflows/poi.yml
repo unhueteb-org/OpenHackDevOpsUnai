@@ -25,7 +25,7 @@ on:
       - .github/workflows/poi.yml
 jobs:
   build_and_test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
     # IF PR, check a Issue has been linked
     - name: Verify Linked Issue
@@ -39,7 +39,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.202'
+        dotnet-version: '2.1.403'
     - name: Add Code Coverage Tools
       working-directory: apis/poi/tests/UnitTests
       run: dotnet add package coverlet.msbuild
