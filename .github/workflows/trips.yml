@@ -1,0 +1,65 @@
+name: Trips CICD
+
+env:
+  registry: docker.pkg.github.com
+  repository: hattan/openhack-devops-team-gh/api-trips
+  docker_path: apis/trips
+  staging_url: https://openhackxv61mxh2trips-staging.azurewebsites.net/
+  prod_url: https://openhackxv61mxh2trips.azurewebsites.net/
+  resource_group: openhackxv61mxh2rg
+  webapp_name: openhackxv61mxh2trips
+  build_name: Trips
+  webv_path: apis/trips/webvalidate
+
+on:
+  push:
+    branches: [ main ]
+    paths: 
+      - apis/trips/**  
+      - .github/workflows/trips.yml
+  pull_request:
+    branches: [ main ]
+    paths: 
+      - apis/trips/**
+      - .github/workflows/trips.yml
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: apis/trips    
+    steps:
+    # IF PR, check a Issue has been linked
+    - name: Verify Linked Issue
+      if: github.event_name == 'pull_request'
+      uses: hattan/verify-linked-issue-action@v1.1.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - uses: actions/checkout@v2
+
+    - name: Setup Go environment
+      uses: actions/setup-go@v2.0.3
+      with:
+        go-version: 1.12
+
+    - name: Install dependencies
+      run: go get
+
+    - name: Run Unit Tests
+      run: go test ./tests
+
+    - uses: actions/github-script@0.9.0
+      if: failure()
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          let body = "${{ env.build_name }} Worflow Failure \n Build Number: ${{ github.run_number }} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} \n SHA: [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }}) \n";
+          github.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: "${{ env.build_name }} Workflow ${{ github.run_number }} Failed! ",
+            body: body
+            });
