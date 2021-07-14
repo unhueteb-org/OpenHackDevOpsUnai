@@ -1,0 +1,61 @@
+name: User Java CICD
+
+env:
+  registry: docker.pkg.github.com
+  repository: hattan/openhack-devops-team-gh/api-user-java
+  docker_path: apis/user-java
+  staging_url: https://openhackxv61mxh2userjava-staging.azurewebsites.net/
+  prod_url: https://openhackxv61mxh2userjava.azurewebsites.net/
+  resource_group: openhackxv61mxh2rg
+  webapp_name: openhackxv61mxh2userjava
+  build_name: User Java
+  webv_path: apis/user-java/webvalidate
+
+on:
+  push:
+    branches: [ main ]
+    paths: 
+      - apis/user-java/**  
+      - .github/workflows/user-java.yml
+  pull_request:
+    branches: [ main ]
+    paths: 
+      - apis/user-java/**
+      - .github/workflows/user-java.yml
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: apis/user-java    
+    steps:
+    # IF PR, check a Issue has been linked
+    - name: Verify Linked Issue
+      if: github.event_name == 'pull_request'
+      uses: hattan/verify-linked-issue-action@v1.1.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: Run Unit Tests
+      run: mvn test
+
+    - uses: actions/github-script@0.9.0
+      if: failure()
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          let body = "${{ env.build_name }} Worflow Failure \n Build Number: ${{ github.run_number }} \n Build Log: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }} \n SHA: [${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }}) \n";
+          github.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: "${{ env.build_name }} Workflow ${{ github.run_number }} Failed! ",
+            body: body
+          });
