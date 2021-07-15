@@ -8,8 +8,7 @@ env:
   prod_url: https://openhackunaiuserprofile.azurewebsites.net/
   resource_group: openhackunairg
   webapp_name: openhackunaiuserprofile
-  build_name: User Java
-  webv_path: apis/user-java/webvalidate
+  build_name: User Profile
 
 on:
   push:
