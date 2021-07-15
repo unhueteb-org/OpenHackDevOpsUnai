@@ -202,6 +202,7 @@ jobs:
         max-attempts: 3
         retry-delay: 5s
     #Load Test using K6
+    - uses: actions/checkout@v2
     - name: Run local k6 test
       uses: k6io/action@v0.1
       with:
