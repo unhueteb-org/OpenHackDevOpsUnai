@@ -26,6 +26,7 @@ on:
 jobs:
   build_and_test:
     runs-on: windows-latest
+    if: github.ref != 'refs/heads/main'
     steps:
     # IF PR, check a Issue has been linked
     - name: Verify Linked Issue
