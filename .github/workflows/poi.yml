@@ -140,16 +140,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: deploy_staging
     steps:
-    - uses: actions/checkout@v2
-
-    - name: "Set Expected Validation Tag"
-      run: sed -i 's/<--tag-->/${{github.run_number}}/g' apis/poi/webvalidate/validate.json
-
-    - name: Build Validation Container
-      run: docker build -t poivalidate apis/poi/webvalidate
-
-    - name: Web Validate 
-      run: ./run.sh poivalidate $staging_url 
+    - name: URL Health Check
+      uses: Jtalk/url-health-check-action@v1.5
+      with:
+        url: ${{env.staging_url}}
+        max-attempts: 3
+        retry-delay: 5s
 
     - uses: actions/github-script@0.9.0
       if: failure()
@@ -193,17 +189,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: swap_slots
     steps:
-    - uses: actions/checkout@v2
+    - name: URL Health Check
+      uses: Jtalk/url-health-check-action@v1.5
+      with:
+        url: ${{env.prod_url}}
+        max-attempts: 3
+        retry-delay: 5s
+    - name: Azure authentication
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS  }}
 
-    - name: "Set Expected Validation Tag"
-      run: sed -i 's/<--tag-->/${{github.run_number}}/g' apis/poi/webvalidate/validate.json
-
-    - name: Build Validation Container
-      run: docker build -t poivalidate apis/poi/webvalidate
-
-    - name: Web Validate 
-      run: ./run.sh poivalidate $prod_url   
-
+    - name: Stop staging
+      run: |
+        az webapp stop --name $webapp_name --resource-group $resource_group --slot staging
     - uses: actions/github-script@0.9.0
       if: failure()
       with:
