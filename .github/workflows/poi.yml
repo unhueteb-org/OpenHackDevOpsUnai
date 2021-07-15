@@ -78,16 +78,3 @@ jobs:
           });
           
   #Build docker image for master branch and publish to GitHub Packages
-  docker_build_and_push:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    needs: build_and_test
-    steps:     
-    - uses: actions/checkout@v2- name: Docker login     
-      run: docker login $registry -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.GITHUB_TOKEN }}
-      
-    - name: Docker build
-      run: docker build -t $registry/$repository:${{github.run_number}} --build-arg build_version=${{github.run_number}} $docker_path
-      
-    - name: Docker Push
-      run: docker push $registry/$repository:${{github.run_number}}
