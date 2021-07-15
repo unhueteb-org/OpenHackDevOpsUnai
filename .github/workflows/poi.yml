@@ -194,12 +194,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: swap_slots
     steps:
+    #Health check
     - name: URL Health Check
       uses: Jtalk/url-health-check-action@v1.5
       with:
         url: ${{env.prod_url}}/api/healthcheck/poi
         max-attempts: 3
         retry-delay: 5s
+    #Load Test using K6
+    - name: Run local k6 test
+      uses: k6io/action@v0.1
+      with:
+        filename: apis/poi/tests/LoadTest/test.js
     - name: Azure authentication
       uses: azure/login@v1
       with:
