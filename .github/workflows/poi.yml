@@ -13,7 +13,6 @@ env:
 
 on:
   push:
-    branches: [ main ]
     paths: 
       - apis/poi/**  
       - .github/workflows/poi.yml
