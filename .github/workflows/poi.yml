@@ -6,7 +6,6 @@ env:
   repository: unhueteb-org/openhackdevopsunai/api-poi
   docker_path: apis/poi/web
   staging_url: https://openhackunaipoi-staging.azurewebsites.net
-  test_end: api/healthcheck/poi
   prod_url: https://openhackunaipoi.azurewebsites.net
   resource_group: openhackunairg
   webapp_name: openhackunaipoi
@@ -144,7 +143,7 @@ jobs:
     - name: URL Health Check
       uses: Jtalk/url-health-check-action@v1.5
       with:
-        url: ${{env.staging_url}}/${{test_end}}
+        url: ${{env.staging_url}}/api/healthcheck/poi
         max-attempts: 3
         retry-delay: 5s
 
@@ -193,7 +192,7 @@ jobs:
     - name: URL Health Check
       uses: Jtalk/url-health-check-action@v1.5
       with:
-        url: ${{env.prod_url}}/${{test_end}}
+        url: ${{env.prod_url}}/api/healthcheck/poi
         max-attempts: 3
         retry-delay: 5s
     - name: Azure authentication
