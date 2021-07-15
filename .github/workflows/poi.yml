@@ -121,7 +121,10 @@ jobs:
         app-name: ${{ env.webapp_name }}
         slot-name: staging
         images: ${{ env.registry }}/${{ env.repository }}:${{github.run_number}}
-
+    - name: Start staging
+      run: |
+        az webapp stop --name $webapp_name --resource-group $resource_group --slot staging
+    
     - uses: actions/github-script@0.9.0
       if: failure()
       with:
