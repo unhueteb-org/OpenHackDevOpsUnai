@@ -151,6 +151,13 @@ jobs:
         url: ${{env.staging_url}}/api/healthcheck/poi
         max-attempts: 3
         retry-delay: 5s
+    #load test change
+    - name: DockerAction
+      uses: PoojaMutadak504/DockerAction@v2
+      with:
+        apikey: ${{secrets.BLAZEMETER_KEY}}
+        apisecret: ${{secrets.BLAZEMETER_SECRET}}
+        testid: 9696505
 
     - uses: actions/github-script@0.9.0
       if: failure()
@@ -201,12 +208,7 @@ jobs:
         url: ${{env.prod_url}}/api/healthcheck/poi
         max-attempts: 3
         retry-delay: 5s
-    #Load Test using K6
-    - uses: actions/checkout@v2
-    - name: Run local k6 test
-      uses: k6io/action@v0.1
-      with:
-        filename: apis/poi/tests/LoadTest/test.js
+    
     - name: Azure authentication
       uses: azure/login@v1
       with:
