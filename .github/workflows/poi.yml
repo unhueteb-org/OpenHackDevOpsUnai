@@ -5,10 +5,10 @@ env:
   registry: ghcr.io
   repository: unhueteb-org/openhackdevopsunai/api-poi
   docker_path: apis/poi/web
-  staging_url: https://openhackxv61mxh2poi-staging.azurewebsites.net
-  prod_url: https://openhackxv61mxh2poi.azurewebsites.net
-  resource_group: openhackxv61mxh2rg
-  webapp_name: openhackxv61mxh2poi
+  staging_url: https://openhackunaipoi-staging.azurewebsites.net
+  prod_url: https://openhackunaipoi.azurewebsites.net
+  resource_group: openhackunairg
+  webapp_name: openhackunaipoi
   build_name: POI
 
 on:
