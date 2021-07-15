@@ -1,7 +1,7 @@
 name: User Java CICD
 
 env:
-  registry: docker.pkg.github.com
+  registry: ghcr.io
   repository: unhueteb-org/openhackdevopsunai/api-user-java
   docker_path: apis/user-java
   staging_url: https://openhackunaiuserjava-staging.azurewebsites.net/
