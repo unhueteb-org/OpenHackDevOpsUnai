@@ -1,7 +1,7 @@
 name: User Profile CICD
 
 env:
-  registry: docker.pkg.github.com
+  registry: ghcr.io
   repository: unhueteb-org/openhackdevopsunai/api-user
   docker_path: apis/userprofile
   staging_url: https://openhackunaiuserprofile-staging.azurewebsites.net/
