@@ -1,4 +1,4 @@
-name: User Java CICD
+name: User Profile CICD
 
 env:
   registry: docker.pkg.github.com
